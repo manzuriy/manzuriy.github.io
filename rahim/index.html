@@ -209,8 +209,13 @@ input[type=text],input[type=number]{width:100%;padding:13px 16px;border:1.5px so
 
  <section>
   <div class="gv rv" style="font-size:46px">Как нас найти</div>
-  <p class="rv" style="color:#8a7560">ул. Регистан, 1, Самарканд</p>
-  <a class="btn rv" href="https://www.google.com/maps/search/?api=1&query=Registan+Street+1+Samarkand" target="_blank" rel="noopener">📍 открыть карту</a>
+  <div class="box rv" style="text-align:center">
+   <div class="sc">адрес</div>
+   <p style="font-size:22px;margin-top:6px">ул. Регистан, 1<br>Самарканд</p>
+   <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Registan+Street+1+Samarkand" target="_blank" rel="noopener">📍 открыть карту</a>
+   <div class="tgwrap"><div class="sc" style="margin-top:22px">связаться с нами</div>
+   <a class="btn alt tgonly" target="_blank" rel="noopener">✈ Telegram <span class="tgname"></span></a></div>
+  </div>
  </section>
 
  <section>
@@ -222,7 +227,7 @@ input[type=text],input[type=number]{width:100%;padding:13px 16px;border:1.5px so
     <label>Вы придёте на праздник Рахима?</label>
     <div class="yn"><button type="button" class="yes" onclick="pick(this,1)">Да, с радостью!</button><button type="button" class="no" onclick="pick(this,0)">К сожалению, не смогу</button></div>
     <label>Сколько гостей придёт (включая вас)?</label><input type="number" id="cnt" min="1" value="1">
-    <div style="text-align:center"><button class="btn" type="submit">отправить ответ</button></div>
+    <div style="text-align:center"><button class="btn" type="submit">отправить ответ в Telegram</button><p style="font-size:14px;color:#8a7560;margin-top:8px">откроется чат с семьёй Рахима — останется нажать «Отправить»</p></div>
    </form>
   </div>
  </section>
@@ -259,11 +264,13 @@ tick();setInterval(tick,1000);
 // reveal
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
 document.querySelectorAll('.rv').forEach(e=>io.observe(e));
-// rsvp
+// rsvp: Telegram username of the hosts (without @)
+const TG='mnzric';
+if(!TG)document.querySelectorAll('.tgwrap').forEach(e=>e.style.display='none');document.querySelectorAll('.tgonly').forEach(e=>e.href='https://t.me/'+TG);document.querySelectorAll('.tgname').forEach(e=>e.textContent='@'+TG);
 let ans=null;function pick(b,v){ans=v;document.querySelectorAll('.yn button').forEach(x=>x.classList.remove('on'));b.classList.add('on')}
 function rsvp(e){e.preventDefault();const n=document.getElementById('nm').value.trim();if(ans===null){alertMsg('Пожалуйста, выберите: придёте или нет');return false}
  const c=document.getElementById('cnt').value;const t=ans?`Здравствуйте! Это ${n}. Мы с радостью придём на день рождения Рахима 🎈 Гостей: ${c}`:`Здравствуйте! Это ${n}. К сожалению, не сможем прийти на день рождения Рахима. Поздравляем! 🎈`;
- location.href='https://t.me/share/url?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(t);return false}
+ location.href=TG?('https://t.me/'+TG+'?text='+encodeURIComponent(t)):('https://t.me/share/url?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(t));return false}
 function alertMsg(m){const b=document.querySelector('.yn');b.style.outline='2px solid #c9776a';b.style.borderRadius='12px';setTimeout(()=>b.style.outline='',1500)}
 </script>
 </body></html>
