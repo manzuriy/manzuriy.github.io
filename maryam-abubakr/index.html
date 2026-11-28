@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Снежное чудо Абубакра и Марьям</title>
+<meta name="description" content="Сказка-мультфильм о Снежной королеве для Абубакра и Марьям — с голосом. Manzuriy, Самарканд">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Manzuriy">
+<meta property="og:title" content="Снежное чудо Абубакра и Марьям">
+<meta property="og:description" content="Сказка о Снежной королеве — мультфильм с голосом">
+<meta property="og:url" content="https://manzuriy.github.io/maryam-abubakr/">
+<meta property="og:image" content="https://manzuriy.github.io/maryam-abubakr/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://manzuriy.github.io/maryam-abubakr/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+/* VOICE: тёплая детская книжка, читаемая вслух перед сном
+   IDEA: акварельная книга, страницы которой оживают в ночном Самарканде
+   PICTURE: каждая сцена — иллюстрация на весь экран, медленно «дышит», идёт снег
+   COLOUR and TYPE: ночной синий #101a36, кремовая бумага #fbf5e9, золото #c9984a; Lora
+   LAYOUT: сцена сверху, текст на кремовой бумаге снизу; на широком экране — рядом */
+:root{color-scheme:light dark;--night:#101a36;--paper:#fbf5e9;--ink:#262c48;--gold:#b98a3e;--gold2:#ecc980}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;background:var(--night);color:var(--ink);font:17px/1.55 Lora,Georgia,serif;overflow:hidden}
+#snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.screen{position:fixed;inset:0;display:none}
+.screen.on{display:block}
+/* start */
+#start{background:radial-gradient(120% 80% at 50% 0%,#24346a 0%,var(--night) 60%);text-align:center;color:#fbf5e9}
+#start .art{position:absolute;inset:auto 0 0 0;height:62%;background:url(img/cover.jpg) center 70%/cover;-webkit-mask:linear-gradient(transparent,#000 22%);mask:linear-gradient(transparent,#000 22%);animation:breathe 18s ease-in-out infinite alternate}
+#start .head{position:relative;padding:clamp(28px,7vh,72px) 20px 0;z-index:2}
+#start h1{margin:0;font-weight:700;font-size:clamp(30px,5.4vw,52px);line-height:1.08;color:var(--gold2);text-wrap:balance;text-shadow:0 2px 18px #0008}
+#start p{margin:10px 0 22px;font-style:italic;font-size:18px;opacity:.9}
+.btn{font:inherit;font-weight:500;border:0;border-radius:999px;padding:12px 26px;min-height:44px;cursor:pointer;background:var(--gold2);color:#1a1f3a;box-shadow:0 6px 20px #0006;transition:transform .2s}
+.btn:hover{transform:translateY(-2px)}.btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.btn.ghost{background:#ffffff1f;color:#fbf5e9;box-shadow:none;border:1px solid #ffffff55}
+#start .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+/* story */
+#story{background:var(--paper)}
+.stage{position:absolute;inset:0 0 auto 0;height:62%;overflow:hidden;background:var(--night)}
+.stage .img{position:absolute;inset:-4%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease}
+.stage .img.in{opacity:1;animation:kb 16s ease-out forwards}
+.stage .img.wide.in{animation:pan 18s ease-in-out forwards}
+.stage.vig{background:var(--paper)}
+.stage.vig .img{inset:12% 25%;background-size:contain;background-repeat:no-repeat;mix-blend-mode:multiply}
+.stage.vig .img.in{animation:float 5s ease-in-out infinite alternate}
+.stage::after{content:"";position:absolute;inset:auto 0 0 0;height:22%;background:linear-gradient(transparent,var(--paper))}
+.page{position:absolute;inset:auto 0 0 0;height:38%;display:flex;align-items:center;justify-content:center;padding:4px 22px 70px}
+.txt{max-width:640px;text-align:center}
+.txt p{margin:0 0 .45em;opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s}
+.txt p.in{opacity:1;transform:none}
+.txt p.ch{color:var(--gold);font-style:italic;font-weight:500}
+.txt p.ch.in{animation:glow 2.4s ease-in-out 1}
+.bar{position:absolute;inset:auto 0 0 0;height:64px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px}
+.nav{width:46px;height:46px;border-radius:50%;border:1px solid #26284833;background:#fff8;color:var(--ink);font-size:22px;cursor:pointer}
+.nav:focus-visible{outline:3px solid var(--gold)}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dots i{width:8px;height:8px;border-radius:50%;background:#26284833}.dots i.on{background:var(--gold)}
+@media (max-width:400px){.dots{gap:4px;flex-wrap:nowrap}.dots i{width:6px;height:6px;flex:none}}
+.tools{display:flex;gap:6px}
+.tool{font:14px Lora,serif;border:1px solid #26284833;background:#fff9;border-radius:999px;padding:8px 12px;min-height:40px;cursor:pointer;color:var(--ink)}
+.tool[aria-pressed=true]{background:var(--gold);color:#fff;border-color:transparent}
+/* end */
+#end{background:radial-gradient(120% 90% at 50% 100%,#24346a 0%,var(--night) 65%);color:#fbf5e9;text-align:center;display:none;place-items:center}
+#end.on{display:grid}
+#end h2{font-size:clamp(34px,6vw,56px);margin:.2em 0;color:var(--gold2)}
+#end .ch{font-style:italic;font-size:20px;color:var(--gold2)}
+#end small{display:block;margin-top:18px;opacity:.8}
+@media(min-width:900px) and (min-aspect-ratio:4/3){
+ #start .art{height:72%;background-size:contain;background-repeat:no-repeat;background-position:center bottom}
+ .stage{inset:0 auto 0 0;width:62%;height:100%}
+ .stage::after{inset:0 0 0 auto;width:18%;height:100%;background:linear-gradient(90deg,transparent,var(--paper))}
+ .page{inset:0 0 0 auto;width:38%;height:100%;padding:40px 36px 80px}
+ .txt{font-size:20px}
+}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.08) translate(-1%,-1%)}}
+@keyframes pan{from{transform:scale(1.06) translateX(3%)}to{transform:scale(1.06) translateX(-3%)}}
+@keyframes breathe{from{transform:scale(1)}to{transform:scale(1.06)}}
+@keyframes float{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-14px) rotate(3deg)}}
+@keyframes glow{0%,100%{text-shadow:none}50%{text-shadow:0 0 16px #ecc980}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<canvas id="snow"></canvas>
+
+<section id="start" class="screen on" aria-label="Обложка">
+  <div class="head">
+    <h1 id="ttl"></h1>
+    <p id="sub"></p>
+    <div class="row">
+      <button class="btn" id="goRead">▶ Слушать сказку</button>
+      <button class="btn ghost" id="go">Читать самим</button>
+    </div>
+  </div>
+  <div class="art" role="img" aria-label="Марьям и Абубакр с оленем на снежном холме над Самаркандом"></div>
+</section>
+
+<section id="story" class="screen" aria-live="polite">
+  <div class="stage" id="stage"><div class="img" id="imgA"></div><div class="img" id="imgB"></div></div>
+  <div class="page"><div class="txt" id="txt"></div></div>
+  <div class="bar">
+    <button class="nav" id="prev" aria-label="Назад">‹</button>
+    <div class="dots" id="dots"></div>
+    <div class="tools">
+      <button class="tool" id="mus" aria-pressed="true" aria-label="Музыка" style="padding:0 12px;font-size:18px">♪</button>
+      <button class="tool" id="read" aria-pressed="false">Голос</button>
+      <button class="nav" id="next" aria-label="Дальше">›</button>
+    </div>
+  </div>
+</section>
+
+<section id="end" class="screen" aria-label="Конец">
+  <div>
+    <div class="ch">«Скрип-скрип, снежок, по тропе — я найду дорогу к тебе!»</div>
+    <h2>Конец</h2>
+    <p id="for"></p>
+    <div class="row" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" id="song">❚❚ Музыка</button>
+      <button class="btn ghost" id="again">Ещё раз</button>
+    </div>
+    <small>Сделано с любовью в Самарканде · @manzuriy</small>
+  </div>
+</section>
+
+<script>
+{
+const DATA = {"title": ["Снежное чудо", "Абубакра и Марьям"], "sub": "Сказка о Снежной королеве", "owner": "Абубакру и Марьям", "scenes": [{"img": "p01", "text": "В Самарканде, в доме с синей резной дверью, жили брат и сестра: Абубакр и маленькая Марьям.\nЗимой они сидели у окна, грели ладошками стекло и смотрели, как снег укрывает купола. Марьям тихонько пела:\n~«Скрип-скрип, снежок, по тропе — я найду дорогу к тебе!»", "audio": "p01"}, {"img": "p02", "text": "Однажды вечером в небе пролетел злой ветер и рассыпал осколки волшебного зеркала.\nКрошечная льдинка попала Абубакру прямо в глаз, а другая — в сердце.", "audio": "p02"}, {"img": "p03", "text": "Абубакр нахмурился.\n«Снег скучный, и розы скучные, и всё скучное», — сказал он холодно.\nМарьям заплакала, а брат даже не обернулся.", "audio": "p03"}, {"img": "s04", "wide": 1, "text": "Ночью на площадь въехали белые сани. В них сидела Снежная королева — в платье из инея, с короной из сосулек.\n«Садись, мальчик, я покажу тебе мир, где всё блестит», — позвала она.\nАбубакр сел, и сани умчались в метель.", "audio": "s04"}, {"img": "p05", "text": "Утром Марьям надела наушники, застегнула куртку и сказала:\n«Я найду брата!»\n~«Скрип-скрип, снежок, по тропе — я иду, братец, к тебе!»", "audio": "p05"}, {"img": "p06", "text": "Сначала она пришла в волшебный сад, где круглый год цвели розы. Добрая садовница звала её остаться навсегда.\nНо розы напомнили Марьям о доме — и она пошла дальше.", "audio": "p06"}, {"img": "p07", "text": "В зимнем лесу её встретил мудрый ворон.\n«Кар! Я видел белые сани. Они летели на север», — сказал он и показал дорогу.", "audio": "p07"}, {"img": "p08", "text": "В тёмной чаще Марьям окружили разбойники. Но маленькая разбойница, девочка с весёлыми глазами, взяла её за руку:\n«Я тебя не отдам! Мой олень отвезёт тебя к брату».", "audio": "p08"}, {"img": "s09", "wide": 1, "text": "Олень мчал Марьям через снежную тундру, а над ними горело северное сияние.\n~«Скрип-скрип, снежок, по тропе — я уже близко к тебе!»", "audio": "s09"}, {"img": "p10", "text": "Ледяной дворец сверкал, как тысяча зеркал.\nАбубакр сидел один на замёрзшем озере и складывал из льдинок слово — но никак не мог его сложить.", "audio": "p10"}, {"img": "p11", "text": "Марьям подбежала и крепко обняла брата. Её тёплые слёзы упали ему на грудь — и лёд в сердце растаял. Абубакр заплакал, и льдинка выпала из глаза.\n«Марьям! Как же я рад тебя видеть!» — воскликнул он.", "audio": "p11"}, {"vig": "v5", "text": "И тогда льдинки сами сложились в слово «ЛЮБОВЬ», а дворец засиял тёплым светом.\nСнежная королева больше не могла их удержать.", "audio": "p12"}, {"img": "p13", "text": "Олень отвёз брата и сестру домой, в Самарканд. Там их ждали мама, папа, ёлка и горячий чай с мандаринами.\n~«Скрип-скрип, снежок, у двери — дома лучше, чем в любом дворце, смотри!»", "audio": "p13"}]};
+const $ = id => document.getElementById(id);
+$("ttl").innerHTML = DATA.title.map(t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))).join("<br>");
+$("sub").textContent = DATA.sub;
+$("for").textContent = "Сказка для Абубакра и Марьям";
+const S = DATA.scenes;
+let i = 0, front = $("imgA"), back = $("imgB"), reading = false, timers = [];
+$("dots").innerHTML = S.map(() => "<i></i>").join("");
+const show = id => { for (const s of document.querySelectorAll(".screen")) s.classList.toggle("on", s.id === id); };
+const clear = () => { timers.forEach(clearTimeout); timers = []; try { player.onended = null; player.pause(); } catch (e) {} };
+
+function render() {
+  clear();
+  const s = S[i];
+  const stage = $("stage");
+  stage.classList.toggle("vig", !!s.vig);
+  back.className = "img" + (s.wide ? " wide" : "");
+  back.style.backgroundImage = `url(img/${s.img || s.vig}.jpg)`;
+  void back.offsetWidth;
+  back.classList.add("in"); front.classList.remove("in");
+  [front, back] = [back, front];
+  const box = $("txt"); box.innerHTML = "";
+  const paras = s.text.split("\n");
+  paras.forEach((p, k) => {
+    const el = document.createElement("p");
+    const ch = p.startsWith("~");
+    el.textContent = ch ? p.slice(1) : p;
+    if (ch) el.className = "ch";
+    box.appendChild(el);
+    timers.push(setTimeout(() => el.classList.add("in"), 500 + k * 1100));
+  });
+  [...$("dots").children].forEach((d, k) => d.classList.toggle("on", k === i));
+  $("prev").disabled = false;
+  if (reading) speak();
+}
+const player = new Audio(); player.preload = "auto";
+function playClip(name, after) {
+  try {
+    player.onended = null; player.pause();
+    player.src = `audio/${name}.mp3`;
+    player.onended = () => { if (after) timers.push(setTimeout(after, 1200)); };
+    const p = player.play(); if (p && p.catch) p.catch(() => {});
+  } catch (e) {}
+}
+function speak() { playClip(S[i].audio, () => { if (reading) next(); }); }
+function next() { if (i < S.length - 1) { i++; render(); } else { clear(); show("end"); if (reading) { duck(0.14); playClip("end", () => duck(0.7)); } else duck(0.7); } }
+// background music (Web Audio gain so volume works on iPhone too)
+const HAS_MUSIC = false;
+if (!HAS_MUSIC) { $("mus").style.display = "none"; $("song").style.display = "none"; }
+const bg = new Audio(HAS_MUSIC ? "audio/song.mp3" : ""); bg.loop = true; bg.preload = "auto";
+let actx = null, gain = null, musicOn = true;
+function initBg() {
+  if (actx) { if (actx.state === "suspended") actx.resume(); return; }
+  try { actx = new (window.AudioContext || window.webkitAudioContext)(); gain = actx.createGain(); actx.createMediaElementSource(bg).connect(gain); gain.connect(actx.destination); } catch (e) { actx = null; }
+}
+function duck(v) {
+  if (gain && actx) { gain.gain.cancelScheduledValues(actx.currentTime); gain.gain.setTargetAtTime(v, actx.currentTime, 0.4); } else { try { bg.volume = v; } catch (e) {} }
+}
+function startBg() { if (!HAS_MUSIC) return; initBg(); if (!musicOn) return; const p = bg.play(); if (p && p.catch) p.catch(() => {}); }
+function setMusic(on) { musicOn = on; $("mus").setAttribute("aria-pressed", String(on)); $("song").textContent = on ? "❚❚ Музыка" : "♪ Песенка"; if (on) startBg(); else bg.pause(); }
+$("mus").onclick = () => setMusic(!musicOn);
+$("song").onclick = () => { setMusic(!musicOn); if (musicOn) duck(0.7); };
+function prev() { if (i > 0) { i--; render(); } else { clear(); show("start"); } }
+function begin(withVoice) {
+  reading = withVoice; $("read").setAttribute("aria-pressed", String(withVoice)); i = 0;
+  startBg(); duck(withVoice ? 0.14 : 0.35);
+  if (withVoice) { clear(); playClip("intro", () => { show("story"); render(); }); $("goRead").textContent = "♪ …"; }
+  else { show("story"); render(); }
+}
+$("go").onclick = () => begin(false);
+$("goRead").onclick = () => begin(true);
+$("again").onclick = () => { $("goRead").textContent = "▶ Слушать сказку"; begin(reading); };
+$("next").onclick = next; $("prev").onclick = prev;
+$("read").onclick = () => { reading = !reading; $("read").setAttribute("aria-pressed", String(reading)); duck(reading ? 0.14 : 0.35); clear(); if (reading) render(); };
+document.addEventListener("keydown", e => { if (!$("story").classList.contains("on")) return; if (e.key === "ArrowRight") next(); if (e.key === "ArrowLeft") prev(); });
+let x0 = null;
+$("story").addEventListener("touchstart", e => x0 = e.touches[0].clientX, { passive: true });
+$("story").addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) (dx < 0 ? next : prev)(); x0 = null; });
+// preload
+S.forEach(s => { const im = new Image(); im.src = `img/${s.img || s.vig}.jpg`; });
+// snow
+const c = $("snow"), g = c.getContext("2d"); let W, H, flakes = [];
+const size = () => { W = c.width = innerWidth * devicePixelRatio; H = c.height = innerHeight * devicePixelRatio; };
+size(); addEventListener("resize", size);
+const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+for (let k = 0; k < 90; k++) flakes.push({ x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 2.2, s: 0.2 + Math.random() * 0.6, w: Math.random() * 6 });
+function tick(t) {
+  g.clearRect(0, 0, W, H);
+  const onPaper = $("story").classList.contains("on") && S[i].vig;
+  g.fillStyle = onPaper ? "rgba(185,138,62,.45)" : "rgba(255,255,255,.85)";
+  for (const f of flakes) {
+    if (!still) { f.y += f.s / 900 * 16; f.x += Math.sin(t / 1500 + f.w) / 4000; if (f.y > 1.02) { f.y = -0.02; f.x = Math.random(); } }
+    g.beginPath(); g.arc(f.x * W, f.y * H, f.r * devicePixelRatio, 0, 7); g.fill();
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+}
+</script>
+</body></html>
