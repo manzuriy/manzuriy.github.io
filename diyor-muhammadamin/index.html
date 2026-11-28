@@ -174,7 +174,7 @@ function speak() { playClip(S[i].audio, () => { if (reading) next(); }); }
 function next() { if (i < S.length - 1) { i++; render(); } else { clear(); show("end"); if (reading) { duck(0.14); playClip("end", () => duck(0.7)); } else duck(0.7); } }
 // background music (Web Audio gain so volume works on iPhone too)
 const HAS_MUSIC = true;
-const HAS_VOICE = false;
+const HAS_VOICE = true;
 if (!HAS_VOICE) { $("goRead").style.display = "none"; $("read").style.display = "none"; $("go").textContent = "▶ Смотреть сказку"; $("go").classList.remove("ghost"); }
 if (!HAS_MUSIC) { $("mus").style.display = "none"; $("song").style.display = "none"; }
 const bg = new Audio(HAS_MUSIC ? "audio/song.mp3" : ""); bg.loop = true; bg.preload = "auto";
